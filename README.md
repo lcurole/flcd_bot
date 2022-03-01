@@ -8,3 +8,9 @@ cd flcd_bot/
 echo "WEBHOOK_URL = 'https://discord.com/api/webhooks/2222222222222/zZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZM4Y9vsyd5go'" > secrets.py
 pip install -r requirements.txt
 ```
+
+## to run
+```
+cd ~/flcd_bot/
+python bot.py
+```
