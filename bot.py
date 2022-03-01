@@ -40,7 +40,7 @@ def save_deals(deals):
 
 
 def send_webhook(message):
-    webhook = SyncWebhook.from_url(WEBHOOK_URL)
+    webhook = discord.Webhook.from_url(WEBHOOK_URL, adapter=discord.RequestsWebhookAdapter())
     webhook.send(message[:1999], username=DISCORD_WEBHOOK_BOT_NAME, avatar_url=DISCORD_WEBHOOK_AVATAR_URL)
 
 
