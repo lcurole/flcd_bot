@@ -1,0 +1,3 @@
+DEALS_UPDATED_DISCORD_MESSAGE = 'Deals have been updated!'
+DISCORD_WEBHOOK_BOT_NAME = 'FLCD Bot'
+DISCORD_WEBHOOK_AVATAR_URL = 'https://cdn.discordapp.com/avatars/869659791482568744/684ee1bfbb50ea3cd26a3a06c1a4a155.webp'
