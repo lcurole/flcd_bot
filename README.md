@@ -9,7 +9,7 @@ echo "WEBHOOK_URL = 'https://discord.com/api/webhooks/2222222222222/zZZZZZZZZZZZ
 pip install -r requirements.txt
 ```
 
-## to run
+## to run (once)
 ```
 cd ~/flcd_bot/
 python bot.py
