@@ -1,6 +1,8 @@
 import json
 import logging
 import os
+import hashlib
+import time
 
 import discord
 import requests
@@ -60,7 +62,9 @@ def main():
     deals_html = soup.find_all('figure', {'class': 'photonic-level-1'})
     current_deals = []
     for deal in deals_html:
-        current_deals.append(deal.find('img')['src'])
+        image = requests.get(deal.find('img')['src'])
+        hashish = hashlib.md5(image.content)
+        current_deals.append(hashish.hexdigest())
     previous_deals = load_deals()
     if current_deals != previous_deals:
         logging.info('Deals have been updated')
@@ -69,4 +73,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    while True:
+        main()
+        logging.info('Sleeping for 5 minutes')
+        time.sleep(60 * 5)
