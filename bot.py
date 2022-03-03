@@ -1,8 +1,8 @@
+import collections
+import hashlib
 import json
 import logging
 import os
-import hashlib
-import time
 
 import discord
 import requests
@@ -66,14 +66,13 @@ def main():
         hashish = hashlib.md5(image.content)
         current_deals.append(hashish.hexdigest())
     previous_deals = load_deals()
-    if current_deals != previous_deals:
+    if collections.Counter(current_deals) != collections.Counter(previous_deals):
         logging.info('Deals have been updated')
+        logging.info(f'Current Deals:\n{current_deals}')
+        logging.info(f'Previous Deals:\n{previous_deals}')
         save_deals(current_deals)
         send_webhook(DEALS_UPDATED_DISCORD_MESSAGE)
 
 
 if __name__ == '__main__':
-    while True:
-        main()
-        logging.info('Sleeping for 5 minutes')
-        time.sleep(60 * 5)
+    main()
