@@ -75,16 +75,21 @@ def main():
 
     current_deals = []
     for deal in deals_html:
-        image = requests.get(deal.find('img')['src'])
-        hashish = hashlib.md5(image.content)
-        current_deals.append(hashish.hexdigest())
+        url = deal.find('img')['src']
+        current_deals.append({
+            'url': url,
+            'image_name': url.split('/')[-1],
+        })
     previous_deals = load_deals()
-    if collections.Counter(current_deals) != collections.Counter(previous_deals):
-        logging.info('Deals have been updated')
-        logging.info(f'Current Deals:\n{current_deals}')
-        logging.info(f'Previous Deals:\n{previous_deals}')
-        save_deals(current_deals)
-        send_webhook(DEALS_UPDATED_DISCORD_MESSAGE)
+    new_deals = set([d['image_name'] for d in current_deals]) - set(previous_deals)
+    if new_deals:
+        logging.info('New deals found')
+        save_deals([d['image_name'] for d in current_deals])
+        # send_webhook(DEALS_UPDATED_DISCORD_MESSAGE)
+        for new_deal in new_deals:
+            send_image([d for d in current_deals if d['image_name'] == new_deal][0]['url'])
+    else:
+        logging.info('No new deals found')
 
 
 if __name__ == '__main__':
