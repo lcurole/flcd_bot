@@ -44,6 +44,13 @@ def send_webhook(message):
     webhook.send(message[:1999], username=DISCORD_WEBHOOK_BOT_NAME, avatar_url=DISCORD_WEBHOOK_AVATAR_URL)
 
 
+def send_image(image):
+    webhook = discord.Webhook.from_url(WEBHOOK_URL, adapter=discord.RequestsWebhookAdapter())
+    embed = discord.Embed()
+    embed.set_image(url=image)
+    webhook.send('_ _', username=DISCORD_WEBHOOK_BOT_NAME, avatar_url=DISCORD_WEBHOOK_AVATAR_URL, embed=embed)
+
+
 def main():
     logging.info('Getting Short Code')
     response = requests.get(url='https://flcannabisdeals.org/todays-florida-dispensary-deals/')
