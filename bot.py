@@ -6,7 +6,7 @@ import discord
 import requests
 from bs4 import BeautifulSoup
 
-from config import DISCORD_WEBHOOK_BOT_NAME, DISCORD_WEBHOOK_AVATAR_URL
+from config import DISCORD_WEBHOOK_BOT_NAME, DISCORD_WEBHOOK_AVATAR_URL, DEALS_UPDATED_DISCORD_MESSAGE
 from secrets import WEBHOOK_URL
 
 logging.basicConfig(
@@ -85,7 +85,7 @@ def main():
     if new_deals:
         logging.info('New deals found')
         save_deals([d['image_name'] for d in current_deals])
-        # send_webhook(DEALS_UPDATED_DISCORD_MESSAGE)
+        send_webhook(DEALS_UPDATED_DISCORD_MESSAGE)
         for new_deal in new_deals:
             send_image([d for d in current_deals if d['image_name'] == new_deal][0]['url'])
     else:
