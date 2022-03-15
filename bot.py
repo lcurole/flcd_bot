@@ -1,3 +1,4 @@
+import io
 import json
 import logging
 import os
@@ -6,7 +7,8 @@ import discord
 import requests
 from bs4 import BeautifulSoup
 
-from config import DISCORD_WEBHOOK_BOT_NAME, DISCORD_WEBHOOK_AVATAR_URL, DEALS_UPDATED_DISCORD_MESSAGE
+from config import DISCORD_WEBHOOK_BOT_NAME, DISCORD_WEBHOOK_AVATAR_URL, DEALS_UPDATED_DISCORD_MESSAGE, \
+    DEALS_IMAGE_EMBED_HEADER_MESSAGE
 from secrets import WEBHOOK_URL
 
 logging.basicConfig(
@@ -45,10 +47,12 @@ def send_webhook(message):
 
 
 def send_image(image):
+    io_bytes = io.BytesIO(image)
+    file = discord.File(fp=io_bytes, filename='image.png')
     webhook = discord.Webhook.from_url(WEBHOOK_URL, adapter=discord.RequestsWebhookAdapter())
-    embed = discord.Embed(title='New Deal!')
-    embed.set_image(url=image)
-    webhook.send(username=DISCORD_WEBHOOK_BOT_NAME, avatar_url=DISCORD_WEBHOOK_AVATAR_URL, embed=embed)
+    embed = discord.Embed(title=DEALS_IMAGE_EMBED_HEADER_MESSAGE)
+    embed.set_image(url='attachment://image.png')
+    webhook.send(username=DISCORD_WEBHOOK_BOT_NAME, avatar_url=DISCORD_WEBHOOK_AVATAR_URL, embed=embed, file=file)
 
 
 def main():
@@ -88,7 +92,13 @@ def main():
         save_deals([d['image_name'] for d in current_deals])
         send_webhook(DEALS_UPDATED_DISCORD_MESSAGE)
         for new_deal in new_deals:
-            send_image([d for d in current_deals if d['image_name'] == new_deal][0]['url'])
+            new_deal = [d for d in current_deals if d['image_name'] == new_deal][0]
+            logging.info(f'Downloading image from: {new_deal["url"]}')
+            response = requests.get(url=new_deal['url'])
+            if response.status_code != 200:
+                logging.error(f'Response status code {response.status_code}')
+                raise Exception(f'Response status code {response.status_code}')
+            send_image(response.content)
     else:
         logging.info('No new deals found')
 
