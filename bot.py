@@ -81,9 +81,10 @@ def main():
             'image_name': url.split('/')[-1],
         })
     previous_deals = load_deals()
-    new_deals = set([d['image_name'] for d in current_deals]) - set(previous_deals)
+    new_deals = list(set([d['image_name'] for d in current_deals]) - set(previous_deals))
     if new_deals:
         logging.info('New deals found')
+        new_deals.reverse()
         save_deals([d['image_name'] for d in current_deals])
         send_webhook(DEALS_UPDATED_DISCORD_MESSAGE)
         for new_deal in new_deals:
