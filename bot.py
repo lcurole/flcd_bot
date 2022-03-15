@@ -6,7 +6,7 @@ import discord
 import requests
 from bs4 import BeautifulSoup
 
-from config import DEALS_UPDATED_DISCORD_MESSAGE, DISCORD_WEBHOOK_BOT_NAME, DISCORD_WEBHOOK_AVATAR_URL
+from config import DISCORD_WEBHOOK_BOT_NAME, DISCORD_WEBHOOK_AVATAR_URL
 from secrets import WEBHOOK_URL
 
 logging.basicConfig(
