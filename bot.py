@@ -112,7 +112,6 @@ def main():
                     status = api.update_status_with_media(status='test', filename=new_deal['image_name'], file=temp)
                 except:
                     logging.exception(f'Error when posting tweet for deal: {new_deal["image_name"]}')
-                print(status)
     else:
         logging.info('No new deals found')
 
