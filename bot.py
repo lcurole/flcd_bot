@@ -42,14 +42,14 @@ def save_deals(deals):
 
 
 def send_webhook(message):
-    webhook = discord.Webhook.from_url(WEBHOOK_URL, adapter=discord.RequestsWebhookAdapter())
+    webhook = discord.SyncWebhook.from_url(WEBHOOK_URL)
     webhook.send(message[:1999], username=DISCORD_WEBHOOK_BOT_NAME, avatar_url=DISCORD_WEBHOOK_AVATAR_URL)
 
 
 def send_image(image):
     io_bytes = io.BytesIO(image)
     file = discord.File(fp=io_bytes, filename='image.png')
-    webhook = discord.Webhook.from_url(WEBHOOK_URL, adapter=discord.RequestsWebhookAdapter())
+    webhook = discord.SyncWebhook.from_url(WEBHOOK_URL)
     embed = discord.Embed(title=DEALS_IMAGE_EMBED_HEADER_MESSAGE)
     embed.set_image(url='attachment://image.png')
     webhook.send(username=DISCORD_WEBHOOK_BOT_NAME, avatar_url=DISCORD_WEBHOOK_AVATAR_URL, embed=embed, file=file)
