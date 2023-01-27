@@ -2,6 +2,8 @@ import io
 import json
 import logging
 import os
+import tweepy
+import tempfile
 
 import discord
 import requests
@@ -9,7 +11,8 @@ from bs4 import BeautifulSoup
 
 from config import DISCORD_WEBHOOK_BOT_NAME, DISCORD_WEBHOOK_AVATAR_URL, DEALS_UPDATED_DISCORD_MESSAGE, \
     DEALS_IMAGE_EMBED_HEADER_MESSAGE
-from secrets import WEBHOOK_URL
+from secrets import API_CONSUMER_KEY, API_CONSUMER_KEY_SECRET, AUTHENTICATION_ACCESS_TOKEN, \
+    AUTHENTICATION_ACCESS_TOKEN_SECRET, WEBHOOK_URL
 
 logging.basicConfig(
     level=logging.INFO,
@@ -91,6 +94,9 @@ def main():
         new_deals.reverse()
         save_deals([d['image_name'] for d in current_deals])
         send_webhook(DEALS_UPDATED_DISCORD_MESSAGE)
+        auth = tweepy.OAuth1UserHandler(API_CONSUMER_KEY, API_CONSUMER_KEY_SECRET, AUTHENTICATION_ACCESS_TOKEN,
+                                        AUTHENTICATION_ACCESS_TOKEN_SECRET)
+        api = tweepy.API(auth)
         for new_deal in new_deals:
             new_deal = [d for d in current_deals if d['image_name'] == new_deal][0]
             logging.info(f'Downloading image from: {new_deal["url"]}')
@@ -99,6 +105,14 @@ def main():
                 logging.error(f'Response status code {response.status_code}')
                 raise Exception(f'Response status code {response.status_code}')
             send_image(response.content)
+            with tempfile.TemporaryFile() as temp:
+                temp.write(response.content)
+                temp.seek(0)
+                try:
+                    status = api.update_status_with_media(status='test', filename=new_deal['image_name'], file=temp)
+                except:
+                    logging.exception(f'Error when posting tweet for deal: {new_deal["image_name"]}')
+                print(status)
     else:
         logging.info('No new deals found')
 
