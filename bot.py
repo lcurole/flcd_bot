@@ -10,7 +10,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from config import DISCORD_WEBHOOK_BOT_NAME, DISCORD_WEBHOOK_AVATAR_URL, DEALS_UPDATED_DISCORD_MESSAGE, \
-    DEALS_IMAGE_EMBED_HEADER_MESSAGE
+    DEALS_IMAGE_EMBED_HEADER_MESSAGE, TWITTER_STATUS_MESSAGE
 from secrets import API_CONSUMER_KEY, API_CONSUMER_KEY_SECRET, AUTHENTICATION_ACCESS_TOKEN, \
     AUTHENTICATION_ACCESS_TOKEN_SECRET, WEBHOOK_URL
 
@@ -109,7 +109,7 @@ def main():
                 temp.write(response.content)
                 temp.seek(0)
                 try:
-                    status = api.update_status_with_media(status='test', filename=new_deal['image_name'], file=temp)
+                    status = api.update_status_with_media(status=TWITTER_STATUS_MESSAGE, filename=new_deal['image_name'], file=temp)
                 except:
                     logging.exception(f'Error when posting tweet for deal: {new_deal["image_name"]}')
     else:
