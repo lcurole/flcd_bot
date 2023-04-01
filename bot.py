@@ -59,21 +59,8 @@ def send_image(image):
 
 
 def main():
-    logging.info('Getting Short Code')
-    response = requests.get(url='https://flcannabisdeals.org/todays-florida-dispensary-deals/')
-    soup = BeautifulSoup(response.content, 'html.parser')
-    short_code = soup.find('input', {'class': 'photonic-js-load-button'})
-    if not short_code or not short_code['data-photonic-shortcode']:
-        logging.error('No short code found')
-        raise Exception('No short code found')
-    short_code = short_code['data-photonic-shortcode']
-
     logging.info(f'Getting deals')
-    data = {
-        'action': 'photonic_lazy_load',
-        'shortcode': short_code
-    }
-    response = requests.post(url='https://flcannabisdeals.org/wp-admin/admin-ajax.php', data=data)
+    response = requests.get(url='https://flcannabisdeals.org/todays-florida-dispensary-deals/')
     soup = BeautifulSoup(response.content, 'html.parser')
     deals_html = soup.find_all('figure', {'class': 'photonic-level-1'})
     if not deals_html:
