@@ -2,11 +2,11 @@ import io
 import json
 import logging
 import os
-import tweepy
 import tempfile
 
 import discord
 import requests
+import tweepy
 from bs4 import BeautifulSoup
 
 from config import DISCORD_WEBHOOK_BOT_NAME, DISCORD_WEBHOOK_AVATAR_URL, DEALS_UPDATED_DISCORD_MESSAGE, \
